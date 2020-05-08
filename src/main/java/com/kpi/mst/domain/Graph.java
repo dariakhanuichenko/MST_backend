@@ -1,4 +1,4 @@
-package com.kpi.mst.service;
+package com.kpi.mst.domain;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,7 +8,7 @@ public class Graph {
     private int vertices;
     private ArrayList<Edge> allEdges = new ArrayList<>();
 
-    Graph(int vertices) {
+    public  Graph(int vertices) {
         this.vertices = vertices;
     }
 

@@ -1,8 +1,11 @@
 package com.kpi.mst.service;
 
+import com.kpi.mst.domain.Graph;
+import com.kpi.mst.domain.MST;
+
 import java.util.*;
 
-public class Utility {
+public class Utility{
 
     public static Graph initial(Integer[][] matrix, int vertices) {
 
@@ -23,9 +26,6 @@ public class Utility {
     }
 
     // ЦФ
-    public static  int getPurposeFunction( Graph graph){
-        return graph.getAllEdges().stream().mapToInt(edge -> edge.weight).sum();
-    }
 
     public static  int getPurposeFunction( MST graph){
         return graph.getEdges().stream().mapToInt(edge -> edge.weight).sum();
@@ -37,9 +37,6 @@ public class Utility {
         return getPurposeFunction(graph);
     }
 
-    public  static  int setDelta(List<Integer[][]> matrixes, MST graph) {
-        return matrixes.stream().mapToInt(matrix -> (Utility.getPurposeFunction(graph, matrix) - graph.getTargetFunction())).sum();
-    }
 
     //===========================
     //FIRST STEP

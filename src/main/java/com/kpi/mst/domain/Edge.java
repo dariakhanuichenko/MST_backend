@@ -1,12 +1,14 @@
-package com.kpi.mst.service;
+package com.kpi.mst.domain;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Edge {
-    int source;
-    int destination;
-    int weight;
+    public int source;
+    public int destination;
+    public int weight;
+
+    public Edge(){}
 
     public Edge(int source, int destination, int weight) {
         this.source = source;

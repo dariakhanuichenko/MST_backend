@@ -1,6 +1,7 @@
-package com.kpi.mst.service;
+package com.kpi.mst.domain;
 
-import java.io.Serializable;
+import com.kpi.mst.service.Utility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +24,6 @@ public class MST {
         return edges;
     }
 
-    public void setEdges(ArrayList<Edge> edges) {
-        this.edges = edges;
-    }
-
     public int getDelta() {
         return delta;
     }
@@ -38,28 +35,11 @@ public class MST {
         }
     }
 
-    public int getTargetFunction() {
-        return targetFunction;
-    }
-
-    public void setTargetFunction(int targetFunction) {
-        this.targetFunction = targetFunction;
-    }
-
     @Override
     public String toString() {
         return "MST{" +
                 ", delta=" + delta +
                 '}';
-    }
-
-    public void printGraph(ArrayList<Edge> edgeList) {
-        for (int i = 0; i < edgeList.size(); i++) {
-            Edge edge = edgeList.get(i);
-            System.out.println("Edge-" + i + " source: " + edge.source +
-                    " destination: " + edge.destination +
-                    " weight: " + edge.weight);
-        }
     }
 
     public void updateWeight(Integer[][] matrix) {
