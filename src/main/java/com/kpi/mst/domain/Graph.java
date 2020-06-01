@@ -69,6 +69,15 @@ public class Graph {
         //print MST
         System.out.println("Minimum Spanning Tree: ");
         printGraph(mst);
+
+        int target = 0;
+        for (Edge e:mst) {
+            target += e.weight;
+        }
+
+        System.out.println("Target function: " + target );
+        System.out.println();
+
         return new MST(mst);
     }
 
