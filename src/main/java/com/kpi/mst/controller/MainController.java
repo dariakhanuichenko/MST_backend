@@ -27,11 +27,11 @@ public class MainController {
     }
 
     @PostMapping(value = "/upload/{l}", headers = "content-type=multipart/form-data")
-    public ResponseEntity<MST> solveFromFile(@RequestParam MultipartFile[] file,
+    public ResponseEntity<List<MST>> solveFromFile(@RequestParam MultipartFile[] file,
                                              @PathVariable String l) {
         try {
             if (file != null && file.length != 0) {
-                MST mst = new MST();
+                List<MST> mst = new ArrayList<>();
                 System.out.println("L" + l);
                 System.out.println("L" + file);
                 if (l != null) {
@@ -48,7 +48,7 @@ public class MainController {
                             file[i].transferTo(inputFiles.get(i));
                         }
                         List<Integer[][]> matrixes = mainService.readMatrixFromFile(inputFiles);
-                        if (arrL.size() != matrixes.size()-1) {
+                        if (arrL.size() != matrixes.size()) {
                             throw new RuntimeException("Invalid number of l");
                         }
                         mst = mainService.calculate(matrixes, arrL);
@@ -65,7 +65,7 @@ public class MainController {
 
 
     @GetMapping(value = "/upload-random")
-    public ResponseEntity<MST> solveRandom(@RequestParam("l") String l,
+    public ResponseEntity<List<MST>> solveRandom(@RequestParam("l") String l,
                                            @RequestParam("size") Integer size,
                                            @RequestParam("number") Integer number) {
 
@@ -80,7 +80,7 @@ public class MainController {
                     throw new RuntimeException("Invalid number of l");
                 }
                 List<Integer[][]> matrixes = mainService.createRandomMatrix(size, number);
-                MST mst = mainService.calculate(matrixes, arrL);
+                List<MST> mst = mainService.calculate(matrixes, arrL);
 
                 return ResponseEntity.ok().body(mst);
             } else

@@ -4,6 +4,7 @@ import com.kpi.mst.domain.Graph;
 import com.kpi.mst.domain.MST;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Utility {
 
@@ -46,19 +47,21 @@ public class Utility {
         return graph1.kruskalMST();
     }
 
-    public static Integer thirdStep(List<Integer> deltas, List<Long> l) {
+    public static List<Integer> thirdStep(List<Integer> deltas, List<Long> l) {
         Map<Integer, Integer> indexes = new HashMap<>();
         for (int i = 0; i < deltas.size()-1; i++) {
-            if (deltas.get(i) < l.get(i)) {
+            if (deltas.get(i) <= l.get(i)) {
                 indexes.put(i, deltas.get(i));
             }
         }
+
+        if(indexes.containsValue( deltas.get(deltas.size()-1)) || indexes.entrySet().stream().filter(entry -> entry.getValue()>=deltas.get(deltas.size()-1)).collect(Collectors.toList()).size()>0)
         indexes.put(deltas.size()-1, deltas.get(deltas.size()-1));
-        if (indexes.entrySet().size() > 1) {
-            return min(indexes);
-        } else {
-            return new ArrayList<>(indexes.keySet()).get(0);
-        }
+//        if (indexes.entrySet().size() > 1) {
+//            return min(indexes);
+//        } else {
+            return new ArrayList<>(indexes.keySet());
+//        }
     }
 
     public static <Integer, V extends Comparable<V>> Integer min(Map<Integer, V> map) {

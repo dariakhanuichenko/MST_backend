@@ -44,8 +44,9 @@ public class MST {
 
     public void setDelta(List<Integer[][]> matrixes, List<MST> msts) {
         System.out.println("DELTA: ");
-        for (int i = 0; i < msts.size()-1; i++) {
+        for (int i = 0; i < msts.size(); i++) {
             System.out.print((i+1)+". ");
+
             delta += Utility.getPurposeFunction(this, matrixes.get(i)) - msts.get(i).targetFunction;
 
             System.out.println("delta = " +Utility.getPurposeFunction(this, matrixes.get(i)) + " - "+ msts.get(i).targetFunction +" = " +(Utility.getPurposeFunction(this, matrixes.get(i)) - msts.get(i).targetFunction));

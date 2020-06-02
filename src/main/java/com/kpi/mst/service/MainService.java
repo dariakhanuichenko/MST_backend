@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class MainService {
         return matrixes;
     }
 
-    public MST calculate(List<Integer[][]> matrixes, List<Long> l) {
+    public List<MST> calculate(List<Integer[][]> matrixes, List<Long> l) {
 
         List<MST> msts = new LinkedList<>();
 
@@ -92,7 +93,7 @@ public class MainService {
         // создали МКД для каждой матрицы
         System.out.println("FIRST");
         matrixes.forEach(matrix -> msts.add(Utility.firstStep(matrix, vertices)));
-        msts.get(vertices).setAdditional(true);
+        msts.get(matrixes.size()-1).setAdditional(true);
 
         // SECOND STEP
         // для каждого МКД посчитать дельту
@@ -100,31 +101,25 @@ public class MainService {
         msts.forEach(mst -> {
             mst.setDelta(matrixes, msts);
         });
-        setDelta(matrixes,msts); // for additional
+//        setDelta(matrixes,msts); // for additional
 
         System.out.println();
         // THIRD STEP
         System.out.println("THIRD");
-        int index = Utility.thirdStep(Mapper.mapListMSTToListDelta(msts), l);
+        List<Integer> index = Utility.thirdStep(Mapper.mapListMSTToListDelta(msts), l);
         System.out.println();
-        msts.get(index).updateWeight(matrixes.get(index));
-        msts.get(index).setTargetFunction();
-        System.out.println("Time: " + (double) (System.currentTimeMillis() - m));
-        return msts.get(index);
+        List<MST> result = new ArrayList<>();
+        index.forEach( i ->{
+            msts.get(i).updateWeight(matrixes.get(i));
+            msts.get(i).setTargetFunction();
+            result.add(msts.get(i));
+        });
+//        msts.get(index).updateWeight(matrixes.get(index));
+//        msts.get(index).setTargetFunction();
+//        System.out.println("Time: " + (double) (System.currentTimeMillis() - m));
+        return result;
     }
 
-    public void setDelta(List<Integer[][]> matrixes, List<MST> msts) {
-        int delta = 0;
-        System.out.println("DELTA: ");
-        for (int i = 0; i < msts.size()-1; i++) {
-            System.out.print((i+1)+". ");
-            delta += Utility.getPurposeFunction(msts.get(msts.size()-1), matrixes.get(i)) - msts.get(msts.size()-1).getTargetFunction();
-
-            System.out.println("delta = " +Utility.getPurposeFunction( msts.get(msts.size()-1), matrixes.get(i)) + " - "+ msts.get(i).getTargetFunction() +" = " +(Utility.getPurposeFunction(msts.get(msts.size()-1), matrixes.get(i)) - msts.get(i).getTargetFunction()));
-        }
-        msts.get(msts.size()-1).setDelta(delta);
-        System.out.println("result delta : " + delta);
-    }
 
     private void additionalMatrix(List<Integer[][]> matrixes, Integer size) {
         Integer[][] matrixNew = new Integer[size][size];
@@ -144,7 +139,6 @@ public class MainService {
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                matrixNew[i][j]/=size;
                 System.out.print(matrixNew[i][j] + " ");
                 if (j == size - 1)
                     System.out.println();
