@@ -1,6 +1,7 @@
 package com.kpi.mst.service;
 
 import com.kpi.mst.domain.MST;
+import com.kpi.mst.domain.Statistics;
 import com.kpi.mst.service.mapper.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,11 @@ public class MainService {
     private final Logger log = LoggerFactory.getLogger(MainService.class);
 
     private final DataReader reader;
+    private final StatisticsService service;
 
-    public MainService(DataReader reader) {
+    public MainService(DataReader reader, StatisticsService service) {
         super();
+        this.service = service;
         this.reader = reader;
     }
 
@@ -75,18 +78,15 @@ public class MainService {
         return matrixes;
     }
 
-    public List<MST> calculate(List<Integer[][]> matrixes, List<Long> l) {
+    public List<MST> calculate(List<Integer[][]> matrixes) {
 
         List<MST> msts = new LinkedList<>();
-
-
-        if (l == null || l.size() == 0) {
-            throw new RuntimeException("l  is null or l = 0");
-        }
 
         int vertices = matrixes.get(0)[0].length;
         long m = System.currentTimeMillis();
 
+        // ZERO STEP
+        // сформировать обопщенную матрицу
         additionalMatrix(matrixes, vertices);
 
         // FIRST STEP
@@ -98,15 +98,18 @@ public class MainService {
         // SECOND STEP
         // для каждого МКД посчитать дельту
         System.out.println("SECOND");
-        msts.forEach(mst -> {
-            mst.setDelta(matrixes, msts);
-        });
-//        setDelta(matrixes,msts); // for additional
+        for(int i = 0; i<msts.size(); i++) {
+             if( i == msts.size()-1) {
+                 msts.get(i).setDeltaAdditional(matrixes, msts);
+             } else {
+                 msts.get(i).setDelta(matrixes, msts);
+             }
+        }
 
         System.out.println();
         // THIRD STEP
         System.out.println("THIRD");
-        List<Integer> index = Utility.thirdStep(Mapper.mapListMSTToListDelta(msts), l);
+        List<Integer> index = Utility.thirdStep(Mapper.mapListMSTToListDelta(msts));
         System.out.println();
         List<MST> result = new ArrayList<>();
         index.forEach( i ->{
@@ -114,9 +117,11 @@ public class MainService {
             msts.get(i).setTargetFunction();
             result.add(msts.get(i));
         });
-//        msts.get(index).updateWeight(matrixes.get(index));
-//        msts.get(index).setTargetFunction();
-//        System.out.println("Time: " + (double) (System.currentTimeMillis() - m));
+
+
+        boolean isAdditional = result.stream().anyMatch(MST::isAdditional);
+        service.save( new Statistics((double) (System.currentTimeMillis() - m), matrixes.size()-1, vertices,isAdditional, "1-10"));
+        System.out.println("Time: " + (double) (System.currentTimeMillis() - m));
         return result;
     }
 

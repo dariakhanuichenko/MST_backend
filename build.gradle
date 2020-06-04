@@ -24,6 +24,8 @@ repositories {
 
 dependencies {
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+	compile 'org.springframework.boot:spring-boot-starter-data-jpa:2.1.0.RELEASE'
+	compile 'org.postgresql:postgresql:42.2.5'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

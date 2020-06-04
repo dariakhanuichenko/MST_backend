@@ -47,16 +47,18 @@ public class Utility {
         return graph1.kruskalMST();
     }
 
-    public static List<Integer> thirdStep(List<Integer> deltas, List<Long> l) {
+    public static List<Integer> thirdStep(List<Integer> deltas) {
         Map<Integer, Integer> indexes = new HashMap<>();
-        for (int i = 0; i < deltas.size()-1; i++) {
-            if (deltas.get(i) <= l.get(i)) {
+        Integer minDelta = deltas.stream().min((Integer::compare)).get();
+
+        for (int i = 0; i < deltas.size(); i++) {
+            if (deltas.get(i).equals(minDelta)) {
                 indexes.put(i, deltas.get(i));
             }
         }
 
-        if(indexes.containsValue( deltas.get(deltas.size()-1)) || indexes.entrySet().stream().filter(entry -> entry.getValue()>=deltas.get(deltas.size()-1)).collect(Collectors.toList()).size()>0)
-        indexes.put(deltas.size()-1, deltas.get(deltas.size()-1));
+//        if(indexes.containsValue( deltas.get(deltas.size()-1)) || indexes.entrySet().stream().filter(entry -> entry.getValue()>=deltas.get(deltas.size()-1)).collect(Collectors.toList()).size()>0)
+//        indexes.put(deltas.size()-1, deltas.get(deltas.size()-1));
 //        if (indexes.entrySet().size() > 1) {
 //            return min(indexes);
 //        } else {
